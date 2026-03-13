@@ -19,7 +19,7 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Aye</h1>
+          <h1>Aye test</h1>
           <p>
             30 sharks on my wrist just for hard times
           </p>
