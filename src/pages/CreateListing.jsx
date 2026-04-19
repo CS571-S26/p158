@@ -24,13 +24,21 @@ function CreateListing({ onSubmit }) {
 
   function handleImages(e) {
     const files = Array.from(e.target.files);
-    const previews = files.map(file => ({
-      id: crypto.randomUUID(),
-      file,
-      url: URL.createObjectURL(file),
-      name: file.name,
-    }));
-    setFormData(prev => ({ ...prev, images: [...prev.images, ...previews] }));
+
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFormData(prev => ({
+          ...prev,
+          images: [...prev.images, {
+            id: crypto.randomUUID(),
+            url: reader.result,  //saves images in localstorage
+            name: file.name,
+          }]
+        }));
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   function removeImage(id) {

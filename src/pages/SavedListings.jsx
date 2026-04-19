@@ -1,28 +1,24 @@
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
-function MyListings({ myListings }) {
+function SavedListings({ savedListings }) {
     const navigate = useNavigate();
 
-    if (myListings.length === 0) {
+    if (savedListings.length === 0) {
         return (
             <Container className="mt-5 text-center">
-                <h4>You have no Listings yet!</h4>
-                <p className="text-muted">Get started by posting your first part-out.</p>
-                <Button onClick={() => navigate('/createListing')}>Create a Listing</Button>
+                <h4>No saved listings yet.</h4>
+                <p className="text-muted">Bookmark a listing while browsing to save it here.</p>
+                <Button onClick={() => navigate('/listings')}>Browse Listings</Button>
             </Container>
         );
     }
 
     return (
         <Container className="mt-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2>My Listings</h2>
-                <Button onClick={() => navigate('/createListing')}>+ New Listing</Button>
-            </div>
-
+            <h2>Saved Listings</h2>
             <Row xs={1} sm={2} md={3} lg={4} className="g-3">
-                {myListings.map(listing => (
+                {savedListings.map(listing => (
                     <Col key={listing.id}>
                         <Card
                             className="h-100"
@@ -43,7 +39,6 @@ function MyListings({ myListings }) {
                                     <span className="text-white">No Image</span>
                                 </div>
                             )}
-
                             <Card.Body>
                                 <Card.Title className="mb-1">
                                     {listing.year} {listing.make} {listing.model}
@@ -51,6 +46,9 @@ function MyListings({ myListings }) {
                                 {listing.trim && (
                                     <Card.Subtitle className="text-muted mb-2">{listing.trim}</Card.Subtitle>
                                 )}
+                                <Card.Text className="small text-muted">
+                                    {listing.parts.filter(p => !p.sold).length} part(s) available
+                                </Card.Text>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -60,4 +58,4 @@ function MyListings({ myListings }) {
     );
 }
 
-export default MyListings;
+export default SavedListings;
