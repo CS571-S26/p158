@@ -5,7 +5,7 @@ function About() {
     return (
         <Container className="mt-4">
             <h2>About Part Out Shark</h2>
-            <p>Part Out Shark is a marketplace for car enthusiasts, mechanics, and junkyards to list vehicles being parted out. Browse available parts, contact sellers, and track what's been sold — all in one place.</p>
+            <p>Part Out Shark is a place to help you find parts you need and part out your own vehicles. We serve car enthusiasts, mechanics, and junkyards alike to make parting out your cars easy.</p>
         </Container>
     );
 }
