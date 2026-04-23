@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 
 function Listings({ listings }) {
   const navigate = useNavigate();
@@ -7,6 +7,7 @@ function Listings({ listings }) {
   if (listings.length === 0) {
     return (
       <Container className="mt-5 text-center">
+        <h1 style={{ fontSize: '4rem' }}>🦈</h1>
         <h4>No listings yet</h4>
         <p className="text-muted">There are currently no listings.</p>
       </Container>
@@ -14,7 +15,7 @@ function Listings({ listings }) {
   }
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4" >
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Listings</h2>
       </div>
@@ -23,8 +24,10 @@ function Listings({ listings }) {
         {listings.map(listing => (
           <Col key={listing.id}>
             <Card
-              className="h-100"
-              style={{ cursor: 'pointer' }}
+              className="h-100 shadow-sm"
+              style={{ cursor: 'pointer', transition: 'transform 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
               onClick={() => navigate(`/listings/${listing.id}`)}
             >
               {listing.images.length > 0 ? (
@@ -41,7 +44,6 @@ function Listings({ listings }) {
                   <span className="text-white">No Image</span>
                 </div>
               )}
-
               <Card.Body>
                 <Card.Title className="mb-1">
                   {listing.year} {listing.make} {listing.model}
@@ -50,7 +52,7 @@ function Listings({ listings }) {
                   <Card.Subtitle className="text-muted mb-2">{listing.trim}</Card.Subtitle>
                 )}
                 <Card.Text className="small text-muted">
-                  {listing.parts.filter(p => !p.sold).length} part(s) unavailable
+                  {listing.parts.length} part(s) removed
                 </Card.Text>
               </Card.Body>
             </Card>

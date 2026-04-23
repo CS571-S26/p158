@@ -7,9 +7,10 @@ function SavedListings({ savedListings }) {
     if (savedListings.length === 0) {
         return (
             <Container className="mt-5 text-center">
+                <h1 style={{ fontSize: '4rem' }}>🦈</h1>
                 <h4>No saved listings yet.</h4>
                 <p className="text-muted">Bookmark a listing while browsing to save it here.</p>
-                <Button onClick={() => navigate('/listings')}>Browse Listings</Button>
+                <Button variant="danger" onClick={() => navigate('/listings')}>Browse Listings</Button>
             </Container>
         );
     }
@@ -21,8 +22,10 @@ function SavedListings({ savedListings }) {
                 {savedListings.map(listing => (
                     <Col key={listing.id}>
                         <Card
-                            className="h-100"
-                            style={{ cursor: 'pointer' }}
+                            className="h-100 shadow-sm"
+                            style={{ cursor: 'pointer', transition: 'transform 0.15s' }}
+                            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'}
+                            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                             onClick={() => navigate(`/listings/${listing.id}`)}
                         >
                             {listing.images.length > 0 ? (
@@ -47,7 +50,7 @@ function SavedListings({ savedListings }) {
                                     <Card.Subtitle className="text-muted mb-2">{listing.trim}</Card.Subtitle>
                                 )}
                                 <Card.Text className="small text-muted">
-                                    {listing.parts.filter(p => !p.sold).length} part(s) available
+                                    {listing.parts.length} part(s) removed
                                 </Card.Text>
                             </Card.Body>
                         </Card>

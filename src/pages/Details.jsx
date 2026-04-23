@@ -3,28 +3,25 @@ import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
 import { useState, useContext } from 'react';
 import loginStatusContext from '../loginStatusContext';
 
-
 function Details({ listings, onDelete, savedIds, onToggleSaved }) {
     const { id } = useParams();
     const navigate = useNavigate();
-
-    const listing = listings.find(l => l.id === id);
+    const { user } = useContext(loginStatusContext);
     const [photoIndex, setPhotoIndex] = useState(0);
 
-    const { user } = useContext(loginStatusContext);
-    const isOwner = user && user.id === listing.userId;
-
-    const isSaved = savedIds.includes(listing.id);
+    const listing = listings.find(l => l.id === id);
 
     if (!listing) {
         return (
             <Container className="mt-5 text-center">
-                <h4>Listing not found.</h4>
-                <Button onClick={() => navigate('/listings')}>Back to Listings</Button>
+                <h4 >Listing not found.</h4>
+                <Button variant="danger" onClick={() => navigate('/listings')}>Back to Listings</Button>
             </Container>
         );
     }
 
+    const isOwner = user && user.id === listing.userId;
+    const isSaved = savedIds.includes(listing.id);
     const hasImages = listing.images && listing.images.length > 0;
 
     function handleDelete() {
@@ -42,13 +39,10 @@ function Details({ listings, onDelete, savedIds, onToggleSaved }) {
         setPhotoIndex(prev => (prev - 1 + listing.images.length) % listing.images.length);
     }
 
-    const availableParts = listing.parts.filter(p => !p.sold);
-    const soldParts = listing.parts.filter(p => p.sold);
-
     return (
         <Container className="mt-4">
 
-            <Button variant="outline-secondary" className="mb-3" onClick={() => navigate(-1)}>
+            <Button variant="danger" className="mb-3" onClick={() => navigate(-1)}>
                 ← Back
             </Button>
             {isOwner && (
@@ -66,21 +60,18 @@ function Details({ listings, onDelete, savedIds, onToggleSaved }) {
                 </Button>
             )}
 
-            {/* ── Title ── */}
             <h2>{listing.year} {listing.make} {listing.model} {listing.trim}</h2>
             <p className="text-muted">Posted by {listing.postedBy}</p>
 
             <Row>
                 {/* ── Left col: photos + description ── */}
                 <Col md={7}>
-
-                    {/* Photo viewer */}
                     {hasImages ? (
                         <div className="mb-3">
                             <img
                                 src={listing.images[photoIndex].url}
                                 alt={`Photo ${photoIndex + 1}`}
-                                style={{ width: '100%', maxHeight: 420, objectFit: 'cover', cursor: listing.images.length > 1 ? 'pointer' : 'default' }}
+                                style={{ width: '100%', maxHeight: 420, objectFit: 'cover', borderRadius: '8px', cursor: listing.images.length > 1 ? 'pointer' : 'default' }}
                                 onClick={listing.images.length > 1 ? nextPhoto : undefined}
                             />
                             {listing.images.length > 1 && (
@@ -90,18 +81,16 @@ function Details({ listings, onDelete, savedIds, onToggleSaved }) {
                                     <Button variant="outline-secondary" size="sm" onClick={nextPhoto}>Next →</Button>
                                 </div>
                             )}
-
                         </div>
                     ) : (
                         <div
                             className="bg-secondary d-flex align-items-center justify-content-center mb-3"
-                            style={{ height: 300 }}
+                            style={{ height: 300, borderRadius: '8px' }}
                         >
                             <span className="text-white">No Images</span>
                         </div>
                     )}
 
-                    {/* Description */}
                     {listing.description && (
                         <>
                             <h5>Description</h5>
@@ -112,30 +101,17 @@ function Details({ listings, onDelete, savedIds, onToggleSaved }) {
 
                 {/* ── Right col: parts ── */}
                 <Col md={5}>
-                    <h5>Parts Available <Badge bg="success">{availableParts.length}</Badge></h5>
-                    {availableParts.length > 0 ? (
-                        <ul className="list-group mb-3">
-                            {availableParts.map(part => (
+                    <h5><Badge bg="secondary">{listing.parts.length}</Badge> Removed Parts </h5>
+                    {listing.parts.length > 0 ? (
+                        <ul className="list-group">
+                            {listing.parts.map(part => (
                                 <li key={part.id} className="list-group-item">
                                     {part.name}
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p className="text-muted">No parts available.</p>
-                    )}
-
-                    {soldParts.length > 0 && (
-                        <>
-                            <h5>Sold Parts <Badge bg="danger">{soldParts.length}</Badge></h5>
-                            <ul className="list-group">
-                                {soldParts.map(part => (
-                                    <li key={part.id} className="list-group-item text-muted" style={{ textDecoration: 'line-through' }}>
-                                        {part.name}
-                                    </li>
-                                ))}
-                            </ul>
-                        </>
+                        <p className="text-muted">No parts removed yet.</p>
                     )}
                 </Col>
             </Row>
